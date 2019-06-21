@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import './App.css';
 import { Router, Route } from 'react-router-dom';
 import { history } from './helpers';
-import { HomePage, LoginPage } from './pages'
+import { PrivateRoute } from './components/PrivateRoute';
+import { HomePage, LoginPage, SignUpPage } from './pages';
 import { alertActions } from './actions';
 
 
@@ -27,8 +28,9 @@ class App extends React.Component {
                         }
                         <Router history={history}>
                             <div>
-                                <Route exact path="/" component={HomePage} />
+                                <PrivateRoute exact path="/" component={HomePage} />
                                 <Route path="/login" component={LoginPage} />
+                                <Route path="/signup" component={SignUpPage}/>
                             </div>
                         </Router>
             </div>
