@@ -1,32 +1,47 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import './App.css';
+import { Router, Route } from 'react-router-dom';
+import { history } from './helpers';
+import { HomePage, LoginPage } from './pages'
+import { alertActions } from './actions';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends React.Component {
+    constructor(props) {
+        super(props);
+
+        const { dispatch } = this.props;
+        history.listen((location, action) => {
+            // clear alert on location change
+            dispatch(alertActions.clear());
+        });
+    }
+
+    render() {
+        const { alert } = this.props;
+        return (
+            <div className="app">
+                        {alert.message &&
+                            <div className={`alert ${alert.type}`}>{alert.message}</div>
+                        }
+                        <Router history={history}>
+                            <div>
+                                <Route exact path="/" component={HomePage} />
+                                <Route path="/login" component={LoginPage} />
+                            </div>
+                        </Router>
+            </div>
+        );
+    }
 }
 
 
 function mapStateToProps(state) {
-    return {
-        state
-    };
+  const { alert } = state;
+  return {
+      alert
+  };
 }
 
 const connectedApp = connect(mapStateToProps)(App);

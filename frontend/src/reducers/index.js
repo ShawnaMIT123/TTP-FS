@@ -1,10 +1,8 @@
+import { combineReducers } from 'redux';
+import { alert } from './alert.reducer';
 
-
-
-const rootReducer = function todoApp(state = {user: true}, action) {
-  // For now, don't handle any actions
-  // and just return the state given to us.
-  return state
-}
+const rootReducer = combineReducers({
+    alert
+});
 
 export default rootReducer;
