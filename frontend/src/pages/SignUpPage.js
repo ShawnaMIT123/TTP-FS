@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {userPostFetch} from '../redux/actions';
+// import {userPostFetch} from '../redux/actions';
+import { userActions } from '../actions';
 
-class Signup extends Component {
+
+class SignUpPage extends Component {
   state = {
-    username: "",
+    email: "",
     password: "",
-    avatar: "",
-    bio: ""
+    submitted: false
   }
 
   handleChange = event => {
@@ -18,7 +19,13 @@ class Signup extends Component {
 
   handleSubmit = event => {
     event.preventDefault()
-    this.props.userPostFetch(this.state)
+    // this.props.userPostFetch(this.state)
+    this.setState({ submitted: true });
+    const { email, password } = this.state;
+    const { dispatch } = this.props;
+    if (email && password) {
+         dispatch(userActions.signup(email, password));
+    }
   }
 
   render() {
@@ -26,11 +33,11 @@ class Signup extends Component {
       <form onSubmit={this.handleSubmit}>
         <h1>Sign Up For An Account</h1>
 
-        <label>Username</label>
+        <label>Email</label>
         <input
-          name='username'
-          placeholder='Username'
-          value={this.state.username}
+          name='email'
+          placeholder='email'
+          value={this.state.email}
           onChange={this.handleChange}
           /><br/>
 
@@ -43,21 +50,6 @@ class Signup extends Component {
           onChange={this.handleChange}
           /><br/>
 
-        <label>Avatar</label>
-          <input
-            name='avatar'
-            placeholder='Avatar (URL)'
-            value={this.state.avatar}
-            onChange={this.handleChange}
-            /><br/>
-
-          <label>Bio</label>
-          <textarea
-            name='bio'
-            placeholder='Bio'
-            value={this.state.bio}
-            onChange={this.handleChange}
-            /><br/>
 
         <input type='submit'/>
       </form>
@@ -65,8 +57,11 @@ class Signup extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  userPostFetch: userInfo => dispatch(userPostFetch(userInfo))
-})
+function mapStateToProps(state) {
+    return {
+       state
+    };
+}
 
-export default connect(null, mapDispatchToProps)(Signup);
+const connectedLoginPage = connect(mapStateToProps)(SignUpPage);
+export { connectedLoginPage as SignUpPage };
