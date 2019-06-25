@@ -74,3 +74,19 @@ function getProfile() {
     function success(user) { return { type: userConstants.PROFILE_SUCCESS, user } }
     function failure(error) { return { type: userConstants.PROFILE_FAILURE, error } }
 }
+
+function purchaseStock(symbol, lastSalePrice, quantity) {
+    return dispatch => {
+        dispatch(request());
+
+        userService.getProfile()
+            .then(
+                user => dispatch(success(user)),
+                error => dispatch(failure(error))
+            );
+    };
+
+    function request() { return { type: userConstants.PURCHASE_REQUEST } }
+    function success(user) { return { type: userConstants.PURCHASE_SUCCESS, user } }
+    function failure(error) { return { type: userConstants.PURCHASE_FAILURE, error } }
+}
