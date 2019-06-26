@@ -6,4 +6,4 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-# Transact.create(user_id: 12, price: 180.00, quantity: 2, ticker: 'AAPL')
+# Transact.create(user_id: 12, price: 150.00, quantity: 3, ticker: 'MSFT')

@@ -29,6 +29,18 @@ export function authentication(state = initialState, action) {
       };
     case userConstants.PROFILE_FAILURE:
       return {};
+    case userConstants.PURCHASE_REQUEST:
+      return {
+        loggingIn: true,
+        user: action.user
+      };
+    case userConstants.PURCHASE_SUCCESS:
+      return {
+        loggedIn: true,
+        user: action.user
+      };
+    case userConstants.PURCHASE_FAILURE:
+      return {};
     case userConstants.LOGOUT:
       return {};
     default:

@@ -7,7 +7,9 @@ export const userActions = {
     login,
     logout,
     signup,
-    getProfile
+    getProfile,
+    getTransactions,
+    purchaseStock
 };
 
 function login(email, password) {
@@ -75,13 +77,40 @@ function getProfile() {
     function failure(error) { return { type: userConstants.PROFILE_FAILURE, error } }
 }
 
+function getTransactions() {
+    return dispatch => {
+        dispatch(request());
+
+        userService.getTransactions()
+            .then(
+                transactions => {
+                  dispatch(success(transactions.transactions));
+                  dispatch(successTransactionsMap(transactions.transactions_map))
+                  console.log(transactions)
+                },
+                error => dispatch(failure(error))
+            );
+    };
+
+    function successTransactionsMap(map) {return { type: userConstants.TRANSACTIONS_MAP_SUCCESS, map}}
+
+    function request() { return { type: userConstants.TRANSACTIONS_REQUEST } }
+    function success(transactions) { return { type: userConstants.TRANSACTIONS_SUCCESS, transactions } }
+    // function success(transactions_map) { return { type: userConstants.TRANSACTIONS_MAP_SUCCESS, transactions_map } }
+    function failure(error) { return { type: userConstants.TRANSACTIONS_FAILURE, error } }
+}
+
 function purchaseStock(symbol, lastSalePrice, quantity) {
     return dispatch => {
         dispatch(request());
 
-        userService.getProfile()
+        userService.purchaseStock(symbol, lastSalePrice, quantity)
             .then(
-                user => dispatch(success(user)),
+
+                user => {
+                  console.log(user)
+                  // dispatch(success(user)),
+                },
                 error => dispatch(failure(error))
             );
     };

@@ -75,9 +75,10 @@ class PurchaseForm extends Component {
     .then(response =>{
       if(response.length < 3){
         console.log(response)
+        this.socket.emit("subscribe", this.state.ticker );
       }else{
-        this.socket.emit("unsubscribe", this.state.currentTicker)
-        this.setState({currentTicker : this.state.ticker})
+        // this.socket.emit("unsubscribe", this.state.currentTicker)
+        // this.setState({currentTicker : this.state.ticker})
         this.socket.emit("subscribe", this.state.ticker );
 
       }

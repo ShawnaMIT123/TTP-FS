@@ -1,4 +1,3 @@
-import config from 'config';
 import { authHeader } from '../helpers/index';
 import { apiUrl } from '../constants';
 
@@ -6,7 +5,10 @@ export const userService = {
     login,
     logout,
     getProfile,
-    signup
+    getTransactions,
+    signup,
+    purchaseStock,
+
 };
 
 function login(email, password) {
@@ -56,6 +58,25 @@ function getProfile() {
     };
 
     return fetch(`${apiUrl}/api/v1/profile/`, requestOptions).then(handleResponse);
+}
+
+function getTransactions() {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    return fetch(`${apiUrl}/api/v1/transactions/`, requestOptions).then(handleResponse);
+}
+
+function purchaseStock(ticker, price, quantity) {
+    const requestOptions = {
+        method: 'POST',
+        headers: authHeader(),
+        body: JSON.stringify({'transact': { ticker, price, quantity}})
+    };
+
+    return fetch(`${apiUrl}/api/v1/purchase/`, requestOptions).then(handleResponse);
 }
 
 
