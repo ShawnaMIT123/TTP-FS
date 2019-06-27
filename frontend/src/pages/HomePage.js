@@ -69,7 +69,7 @@ class HomePage extends React.Component {
 
          socketio.on("message", message => {
            const msg = JSON.parse(message);
-           console.log(msg);
+           // console.log(msg);
            // console.log(this.state.data); // shows newData in Data
          });
          // //Very simply connect to the socket

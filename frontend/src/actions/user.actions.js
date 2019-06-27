@@ -119,3 +119,23 @@ function purchaseStock(symbol, lastSalePrice, quantity) {
     function success(user) { return { type: userConstants.PURCHASE_SUCCESS, user } }
     function failure(error) { return { type: userConstants.PURCHASE_FAILURE, error } }
 }
+
+// function getOpeningPrice(){
+//   return dispatch => {
+//       dispatch(request());
+//       userService.getOpeningPrice(symbol, lastSalePrice, quantity)
+//           .then(
+//
+//               user => {
+//                 console.log(user)
+//                 // dispatch(success(user)),
+//               },
+//               error => dispatch(failure(error))
+//           );
+//   };
+//
+//   function request() { return { type: userConstants.OPENING_PRICE_REQUEST } }
+//   function success(user) { return { type: userConstants.OPENING_PRICE_SUCCESS, user } }
+//   function failure(error) { return { type: userConstants.OPENING_PRICE_FAILURE, error } }
+//
+// }

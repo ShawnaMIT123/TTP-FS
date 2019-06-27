@@ -1,5 +1,5 @@
 import { authHeader } from '../helpers/index';
-import { apiUrl } from '../constants';
+import { apiUrl, iexapiUrl } from '../constants';
 
 export const userService = {
     login,
@@ -8,6 +8,7 @@ export const userService = {
     getTransactions,
     signup,
     purchaseStock,
+    getOpeningPrice
 
 };
 
@@ -79,10 +80,18 @@ function purchaseStock(ticker, price, quantity) {
     return fetch(`${apiUrl}/api/v1/purchase/`, requestOptions).then(handleResponse);
 }
 
+function getOpeningPrice(symbol){
+  const requestOptions = {
+      method: 'GET',
+  };
+  return fetch(`${iexapiUrl}stock/${symbol}/ohlc?token=pk_1d9ec4ada27746599964da901ab535f1`, requestOptions).then(handleResponse);
+}
+
 
 function handleResponse(response) {
     return response.text().then(text => {
         const data = text && JSON.parse(text);
+
         if (!response.ok) {
             if (response.status === 401) {
                 // auto logout if 401 response returned from api

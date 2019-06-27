@@ -3,12 +3,29 @@ import { userService } from '../services';
 import { alertActions } from './';
 
 export const portfolioActions = {
-  updatePortfolioStockPrice
+  updatePortfolioStockPrice,
+  getOpeningPrice
 };
 
-function updatePortfolioStockPrice(symbol, askPrice, bidPrice, lastSalePrice) {
+function updatePortfolioStockPrice(symbol, pricing) {
     return dispatch => {
-        dispatch(success({ symbol, askPrice, bidPrice, lastSalePrice }));
+        dispatch(success(symbol, pricing));
     };
-    function success(stock) { return { type: apiConstants.UPDATE_PORTFOLIO_STOCK_PRICE, stock } }
+    function success(symbol, pricing) { return { type: apiConstants.UPDATE_PORTFOLIO_STOCK_PRICE, symbol, pricing } }
+}
+
+function getOpeningPrice(symbol) {
+    return dispatch => {
+        dispatch(request(symbol));
+
+        userService.getOpeningPrice(symbol)
+            .then(
+              ohlc => dispatch(success(symbol, ohlc)),
+              error => dispatch(failure(error))
+            );
+    };
+
+    function request(symbol) { return { type: apiConstants.OPENING_PRICE_REQUEST, symbol } }
+    function success(symbol, ohlc) { return { type: apiConstants.OPENING_PRICE_SUCCESS, symbol, ohlc } }
+    function failure(error) { return { type: apiConstants.OPENING_PRICE_FAILURE, error } }
 }

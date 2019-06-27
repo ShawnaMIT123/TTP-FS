@@ -6,7 +6,8 @@ import { history } from './helpers';
 import { PrivateRoute } from './components/PrivateRoute';
 import { HomePage, LoginPage, SignUpPage } from './pages';
 import { alertActions } from './actions';
-
+require('dotenv').config({ path: '/Users/shawnie/Development/TTP-FS/frontend/.env' })
+console.log("api key", process.env.REACT_APP_IEX_API_KEY)
 
 class App extends React.Component {
     constructor(props) {

@@ -7,6 +7,8 @@ import { PurchaseForm } from './PurchaseForm'
 import { PortfolioList } from './PortfolioList'
 
 
+
+
 class Portfolio extends Component {
   constructor(props) {
     super(props);
@@ -21,23 +23,27 @@ class Portfolio extends Component {
 
     this.socket.on("message", message => {
       console.log(message)
-      // let stock = JSON.parse(message)
-      // let { symbol, askPrice, bidPrice, lastSalePrice }  = stock
-      this.props.dispatch(portfolioActions.updatePortfolioStockPrice(message));
+      let stock = JSON.parse(message)
+      let { symbol, askPrice, bidPrice, lastSalePrice }  = stock
+      let pricing = { askPrice, bidPrice, lastSalePrice}
+      this.props.dispatch(portfolioActions.updatePortfolioStockPrice(symbol, pricing));
       const msg = JSON.parse(message);
       console.log(msg);
     });
   }
 
   componentDidMount(){
-    this.socket.on("connected", message => {
-      console.log(message)
-      // let stock = JSON.parse(message)
-      // let { symbol, askPrice, bidPrice, lastSalePrice }  = stock
-      // this.props.dispatch(portfolioActions.updatePortfolioStockPrice(message));
-      // const msg = JSON.parse(message);
-      // console.log(msg);
-    });
+    console.log(process.env.REACT_APP_IEX_API_KEY)
+    // this.socket.on("connected", message => {
+    //   console.log(message)
+    //   // let stock = JSON.parse(message)
+    //   // let { symbol, askPrice, bidPrice, lastSalePrice }  = stock
+    //   // this.props.dispatch(portfolioActions.updatePortfolioStockPrice(message));
+    //   // const msg = JSON.parse(message);
+    //   // console.log(msg);
+    // });
+        //
+        // this.subscribeToSocket(this.tickerSymbolsForSubscription())
 
   }
 
@@ -56,14 +62,26 @@ class Portfolio extends Component {
         console.log(channel)
         this.socket.emit("subscribe", channel);
   }
+  fetchOpeningPrices = (symbols) => {
+    for(let symbol of symbols.split(",")){
+      console.log(symbol)
+      this.props.dispatch(portfolioActions.getOpeningPrice(symbol));
+
+    }
+    // this.socket.emit('subscribe', JSON.stringify({
+    //   symbols: [`${symbols}`],
+    //   channels: ['officialprice'],
+    // }))
+  }
 
   render() {
   const { portfolio } = this.props;
   const { subscribed } = this.state;
-  // if (portfolio && !subscribed){
-  //   this.subscribeToSocket(this.tickerSymbolsForSubscription())
-  //    this.setState({subscribed: true})
-  // }
+  if (portfolio && !subscribed){
+    // this.subscribeToSocket(this.tickerSymbolsForSubscription())
+    this.fetchOpeningPrices(this.tickerSymbolsForSubscription())
+     this.setState({subscribed: true})
+  }
 
     return (
       <div>

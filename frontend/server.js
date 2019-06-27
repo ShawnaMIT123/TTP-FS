@@ -23,3 +23,10 @@ io.on('connection', socket => {
 })
 
 server.listen(port, () => console.log(`Listening on port ${port}`))
+
+app.get('/', (req, res) => {
+    res.send(process.env.SECRET_KEY);
+})
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}.`)
+})

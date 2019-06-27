@@ -15,8 +15,18 @@ export function portfolio(state = {}, action) {
       ...state,
       transactions_map: {
         ...state.transactions_map,
-        [action.stock.symbol]: {...state.transactions_map[action.stock.symbol],
-          pricing: action.stock.bidPrice
+        [action.symbol]: {...state.transactions_map[action.symbol],
+          pricing: action.pricing
+        }
+      }
+    };
+    case apiConstants.OPENING_PRICE_SUCCESS:
+    return {
+      ...state,
+      transactions_map: {
+        ...state.transactions_map,
+        [action.symbol]: {...state.transactions_map[action.symbol],
+          ohlc: action.ohlc
         }
       }
     };
