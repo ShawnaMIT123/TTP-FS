@@ -29,11 +29,15 @@ class SignUpPage extends Component {
   }
 
   render() {
+
+    const { alert } = this.props;
+
     return (
-      <form onSubmit={this.handleSubmit}>
+    <div className="login-page">
+      <div className="form">
+      <form onSubmit={this.handleSubmit} className="register-form" >
         <h1>Sign Up For An Account</h1>
 
-        <label>Email</label>
         <input
           name='email'
           placeholder='email'
@@ -41,7 +45,7 @@ class SignUpPage extends Component {
           onChange={this.handleChange}
           /><br/>
 
-        <label>Password</label>
+
         <input
           type='password'
           name='password'
@@ -50,18 +54,25 @@ class SignUpPage extends Component {
           onChange={this.handleChange}
           /><br/>
 
-
-        <input type='submit'/>
+          <div className="form-group">
+              <button>Submit</button>
+              {alert.message &&
+                  <div className={`alert ${alert.type}`}>{alert.message}</div>
+              }
+          </div>
       </form>
+      </div>
+    </div>
     )
   }
 }
 
 function mapStateToProps(state) {
-    return {
-       state
-    };
+  const { alert } = state;
+  return {
+      alert
+  };
 }
 
-const connectedLoginPage = connect(mapStateToProps)(SignUpPage);
-export { connectedLoginPage as SignUpPage };
+const connectedSignUpPage = connect(mapStateToProps)(SignUpPage);
+export { connectedSignUpPage as SignUpPage };

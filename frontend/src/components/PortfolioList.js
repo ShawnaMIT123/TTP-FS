@@ -11,12 +11,33 @@ class PortfolioList extends React.Component {
     });
   }
 
-        // {this.renderStocks(this.props.portfolio)}
+  renderCumulativeStocksValue = (transactions) => {
+    return (Object.keys(transactions).map(function(key, index) {
+      let pricing = transactions[key].pricing;
+      let askPrice = 0
+      let latestSalePrice = 0
+      let quantity = transactions[key].quantity
+      if (pricing) {
+          askPrice = pricing.askPrice
+          latestSalePrice = pricing.lastSalePrice
+          if(askPrice){
+            return askPrice * quantity
+          } else {
+            return latestSalePrice * quantity
+          }
+      }
+    }).reduce(function(acc, val) { return acc + val; }, 0)).toFixed(2);
+  }
+
+
   render() {
+
     return(
     <div>
-      {this.props.portfolio ?
-      (<Table basic='very'  size='small'  >
+      {(this.props.portfolio)?
+      (<div>
+        <h1>Stocks Amount: ${this.renderCumulativeStocksValue(this.props.portfolio)}</h1>
+        <Table basic='very'  size='small'  >
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Symbol</Table.HeaderCell>
@@ -25,13 +46,17 @@ class PortfolioList extends React.Component {
           </Table.Row>
         </Table.Header>
         <Table.Body>
+
         {this.renderStocks(this.props.portfolio)}
+
         </Table.Body>
-      </Table>): (<h3>No Transactions</h3>)}
+      </Table>
+    </div>): (<h3>No Transactions</h3>)}
      </div>);
    }
 }
 
+        // {this.renderCumulativeStocksValue(this.props.portfolio)}
 function mapStateToProps(state) {
     const { authentication } = state;
     const { user } = authentication;

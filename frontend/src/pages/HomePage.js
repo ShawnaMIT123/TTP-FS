@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import socketIOClient from 'socket.io-client'
 import Portfolio from '../components/Portfolio'
 import Transactions from '../components/Transactions'
+import NavBar from '../components/NavBar'
 import { userActions } from '../actions';
 
 // const socket = require('socket.io-client')('https://ws-api.iextrading.com/1.0/tops')
@@ -32,6 +33,8 @@ class HomePage extends React.Component {
   }
 
 
+
+
   handlePortfolioClick = () => {
     this.setState({portfolio: true});
   }
@@ -39,6 +42,8 @@ class HomePage extends React.Component {
   handleTransactionClick = () => {
     this.setState({portfolio: false});
   }
+
+
 
   // socket.on(constants.SOCKET_GET_CHAT, data => {
   //   this.setState(previousState => ({
@@ -122,7 +127,7 @@ class HomePage extends React.Component {
 
         if (user) {
           console.log(user)
-          message = <h1>Hi {user.email}!</h1>;
+          message = <h1>Hi {user.user.email}!</h1>;
         } else {
           message =     <h1> </h1>;
         }
@@ -130,19 +135,9 @@ class HomePage extends React.Component {
         const portfolio = this.state.portfolio;
 
         return (
-            <div className="col-md-6 col-md-offset-3">
+            <div >
+            <NavBar handleTransactionClick={this.handleTransactionClick} handlePortfolioClick={this.handlePortfolioClick}/>
                 {message}
-                <p>You're logged in with React & JWT!!</p>
-                <p>
-                <button onClick={this.handlePortfolioClick}>
-                    Portfolio
-                </button>
-                <button onClick={this.handleTransactionClick}>
-                    Transactions
-                </button>
-
-                    <Link to="/login">Logout</Link>
-                </p>
                 <div>
                   {portfolio ? (
                     <Portfolio {...this.props}/>

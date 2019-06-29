@@ -13,5 +13,9 @@ class Transact < ApplicationRecord
     map
   end
 
+  def self.find_transactions_quantity_sum(transactions, ticker)
+    transactions.where(ticker: ticker).map{ |t| t.quantity }.inject(:+)
+  end
+
 
 end

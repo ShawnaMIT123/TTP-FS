@@ -1,10 +1,11 @@
-import { apiConstants } from '../constants';
+import { apiConstants, userConstants } from '../constants';
 import { userService } from '../services';
 import { alertActions } from './';
 
 export const portfolioActions = {
   updatePortfolioStockPrice,
-  getOpeningPrice
+  getOpeningPrice,
+  updateTransactionsMap
 };
 
 function updatePortfolioStockPrice(symbol, pricing) {
@@ -28,4 +29,12 @@ function getOpeningPrice(symbol) {
     function request(symbol) { return { type: apiConstants.OPENING_PRICE_REQUEST, symbol } }
     function success(symbol, ohlc) { return { type: apiConstants.OPENING_PRICE_SUCCESS, symbol, ohlc } }
     function failure(error) { return { type: apiConstants.OPENING_PRICE_FAILURE, error } }
+}
+
+
+function updateTransactionsMap(symbol, quantity) {
+    return dispatch => {
+        dispatch(success(symbol, quantity));
+    };
+    function success(symbol, quantity) { return { type: userConstants.UPDATE_TRANSACTIONS_MAP, symbol, quantity } }
 }

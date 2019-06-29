@@ -5,6 +5,7 @@ import socket from "socket.io-client";
 import { portfolioActions } from '../actions';
 import { PurchaseForm } from './PurchaseForm'
 import { PortfolioList } from './PortfolioList'
+import { Grid, Divider, Segment } from 'semantic-ui-react'
 
 
 
@@ -49,6 +50,9 @@ class Portfolio extends Component {
 
   handleStockPriceUpdate = (symbol, askPrice, bidPrice, lastSalePrice) => {
     this.props.dispatch(portfolioActions.updatePortfolioStockPrice(symbol, askPrice, bidPrice, lastSalePrice));
+    // <button onClick={()=>this.handleStockPriceUpdate('AAPL', 25.00, 27.88, 29.95)}>
+    //     Fake API Call
+    // </button>
   }
 
 
@@ -62,37 +66,38 @@ class Portfolio extends Component {
         console.log(channel)
         this.socket.emit("subscribe", channel);
   }
+
   fetchOpeningPrices = (symbols) => {
     for(let symbol of symbols.split(",")){
       console.log(symbol)
       this.props.dispatch(portfolioActions.getOpeningPrice(symbol));
-
     }
-    // this.socket.emit('subscribe', JSON.stringify({
-    //   symbols: [`${symbols}`],
-    //   channels: ['officialprice'],
-    // }))
   }
 
   render() {
   const { portfolio } = this.props;
   const { subscribed } = this.state;
   if (portfolio && !subscribed){
-    // this.subscribeToSocket(this.tickerSymbolsForSubscription())
+    this.subscribeToSocket(this.tickerSymbolsForSubscription())
     this.fetchOpeningPrices(this.tickerSymbolsForSubscription())
      this.setState({subscribed: true})
   }
 
     return (
       <div>
-        <h3>Portfolio Page</h3>
-        <button onClick={()=>this.handleStockPriceUpdate('AAPL', 25.00, 27.88, 29.95)}>
-            Fake API Call
-        </button>
-        <PortfolioList {...this.props} />
-
-        <PurchaseForm />
-
+        <Segment placeholder>
+      <Grid columns={2} divided >
+            <Divider vertical> </Divider>
+          <Grid.Row verticalAlign='middle'>
+          <Grid.Column>
+            <PortfolioList {...this.props} />
+          </Grid.Column>
+          <Grid.Column>
+            <PurchaseForm subscribeToPortfolioWebSocket={this.subscribeToSocket} />
+          </Grid.Column>
+          </Grid.Row>
+      </Grid>
+      </Segment>
       </div>
     );
   }

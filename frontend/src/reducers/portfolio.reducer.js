@@ -30,6 +30,16 @@ export function portfolio(state = {}, action) {
         }
       }
     };
+    case userConstants.UPDATE_TRANSACTIONS_MAP:
+    return {
+      ...state,
+      transactions_map: {
+        ...state.transactions_map,
+        [action.symbol]: {...state.transactions_map[action.symbol],
+          quantity: action.quantity
+        }
+      }
+    };
     default:
       return state
     };

@@ -10,6 +10,10 @@ export function transactions(state = {}, action) {
       return {
         transactions: action.transactions
       };
+    case userConstants.ADD_TRANSACTIONS_SUCCESS:
+      return {
+        transactions: [...state.transactions, action.transaction ]
+      };
     case userConstants.TRANSACTIONS_FAILURE:
       return {
         error: action.error

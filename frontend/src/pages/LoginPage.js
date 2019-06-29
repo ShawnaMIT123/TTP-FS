@@ -17,8 +17,6 @@ class LoginPage extends React.Component {
             submitted: false
         };
 
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleChange = e => {
@@ -43,6 +41,7 @@ class LoginPage extends React.Component {
             <div className="login-page">
                 <div className="form">
                 <form className="login-form" onSubmit={this.handleSubmit}>
+                    <h1>Log Into SMX Account</h1>
                     <div className={'form-group' + (submitted && !email ? ' has-error' : '')}>
                         <input type="text" className="form-control" placeholder="email" name="email" value={email} onChange={this.handleChange} />
                         {submitted && !email &&

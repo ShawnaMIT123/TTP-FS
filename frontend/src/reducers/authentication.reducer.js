@@ -16,9 +16,7 @@ export function authentication(state = initialState, action) {
         user: action.user
       };
     case userConstants.LOGIN_FAILURE:
-      return {
-        loggedIn: false
-      };
+      return {};
     case userConstants.PROFILE_REQUEST:
       return {
         loggingIn: true,
@@ -41,8 +39,16 @@ export function authentication(state = initialState, action) {
         loggedIn: true,
         user: action.user
       };
-    case userConstants.PURCHASE_FAILURE:
-      return {};
+    case userConstants.UPDATE_USER_BALANCE:
+    return {
+      ...state,
+      user: {
+        ...state.user,
+        user: {...state.user.user,
+          balance: action.balance
+        }
+        }
+      }
     case userConstants.LOGOUT:
       return {};
     default:

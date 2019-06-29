@@ -9,7 +9,9 @@ export const userActions = {
     signup,
     getProfile,
     getTransactions,
-    purchaseStock
+    purchaseStock,
+    addNewTransaction,
+    updateUserBalance
 };
 
 function login(email, password) {
@@ -38,6 +40,15 @@ function logout() {
     userService.logout();
     return { type: userConstants.LOGOUT };
 }
+
+function addNewTransaction(transaction) {
+    return { type: userConstants.ADD_TRANSACTIONS_SUCCESS, transaction };
+}
+
+function updateUserBalance(balance) {
+    return { type: userConstants.UPDATE_USER_BALANCE, balance };
+}
+
 
 function signup(email, password) {
     return dispatch => {
@@ -119,23 +130,3 @@ function purchaseStock(symbol, lastSalePrice, quantity) {
     function success(user) { return { type: userConstants.PURCHASE_SUCCESS, user } }
     function failure(error) { return { type: userConstants.PURCHASE_FAILURE, error } }
 }
-
-// function getOpeningPrice(){
-//   return dispatch => {
-//       dispatch(request());
-//       userService.getOpeningPrice(symbol, lastSalePrice, quantity)
-//           .then(
-//
-//               user => {
-//                 console.log(user)
-//                 // dispatch(success(user)),
-//               },
-//               error => dispatch(failure(error))
-//           );
-//   };
-//
-//   function request() { return { type: userConstants.OPENING_PRICE_REQUEST } }
-//   function success(user) { return { type: userConstants.OPENING_PRICE_SUCCESS, user } }
-//   function failure(error) { return { type: userConstants.OPENING_PRICE_FAILURE, error } }
-//
-// }
