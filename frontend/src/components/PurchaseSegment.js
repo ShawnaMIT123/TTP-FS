@@ -8,7 +8,7 @@ const PurchaseSegment = (props) => {
   if(props.stockPrice.stock){
     askPrice = props.stockPrice.stock.askPrice
   }
-
+  
   let segment;
 
   if (askPrice) {
@@ -16,7 +16,6 @@ const PurchaseSegment = (props) => {
   } else {
     segment = <StockUnavailable {...props} />;
   }
-
 
   return(
   <Segment placeholder>

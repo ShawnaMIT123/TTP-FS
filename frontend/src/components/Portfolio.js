@@ -69,21 +69,16 @@ class Portfolio extends Component {
     }
     return (
       <div>
-        <Segment placeholder>
-          <Grid columns={2} divided>
-            <Divider vertical> </Divider>
-            <Grid.Row verticalAlign="middle">
-              <Grid.Column>
+          <Grid columns={2} divided padded>
+              <Grid.Column >
                 <PortfolioList {...this.props} />
               </Grid.Column>
-              <Grid.Column>
+              <Grid.Column >
                 <PurchaseForm
                   subscribeToPortfolioWebSocket={this.subscribeToSocket}
                 />
               </Grid.Column>
-            </Grid.Row>
           </Grid>
-        </Segment>
       </div>
     );
   }

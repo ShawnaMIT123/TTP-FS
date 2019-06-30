@@ -54,7 +54,7 @@ class PortfolioList extends React.Component {
               Stocks Amount: $
               {this.renderCumulativeStocksValue(this.props.portfolio)}
             </h1>
-            <Table basic="very" size="small">
+            <Table size="small">
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell>Symbol</Table.HeaderCell>

@@ -39,6 +39,8 @@ class HomePage extends React.Component {
     }
     return (
       <div>
+      <div className="background"> </div>
+      <div className="content">
         <NavBar
           handleTransactionClick={this.handleTransactionClick}
           handlePortfolioClick={this.handlePortfolioClick}
@@ -51,6 +53,7 @@ class HomePage extends React.Component {
             <Transactions {...this.props} />
           )}
         </div>
+      </div>
       </div>
     );
   }

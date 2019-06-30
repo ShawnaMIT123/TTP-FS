@@ -7,7 +7,10 @@ const StockUnavailable = (props) => {
   if(props.stockPrice.stock){
     lastSalePrice = (props.stockPrice.stock.lastSalePrice).toFixed(2)
     symbol = props.stockPrice.stock.symbol
-  }
+   }
+  // else if(){
+  //
+  // }
 
   let segment;
 

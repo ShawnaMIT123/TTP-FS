@@ -17,7 +17,7 @@ class TableList extends React.Component {
     return (
       <div >
       {transactions  ? (
-      <Table basic='very'  size='small'  >
+      <Table   size='small'  >
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Stock</Table.HeaderCell>
