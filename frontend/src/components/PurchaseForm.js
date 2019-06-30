@@ -24,7 +24,9 @@ class PurchaseForm extends Component {
         submitted: false,
         socketTicker: null,
         isLoading: false,
-        isError: false,
+        isTickerError: false,
+        quantityError: false,
+        balanceError: false,
         subscribed: false,
         subscribedStockTicker: null,
         purchaseLoading: false,
@@ -52,23 +54,113 @@ class PurchaseForm extends Component {
     this.props.dispatch(stockPriceActions.updateCurrentStockPrice(stock));
   }
 
+  componentDidMount = () => {
+    this.setState({subscribed: true, subscribedStockTicker: 'SNAP'})
+    setInterval(
+      () => this.mockWebSocketConnection(),
+      1000
+    );
+  }
+
+  mockWebSocketConnection = () => {
+    let stock =   {
+        "symbol": "SNAP",
+        "marketPercent": 0.00901,
+        "bidSize": 200,
+        "bidPrice": 110.94,
+        "askSize": 100,
+        "askPrice": this.getRandomArbitrary(115,130),
+        "volume": 177265,
+        "lastSalePrice": 111.76,
+        "lastSaleSize": 5,
+        "lastSaleTime": 1480446905681,
+        "lastUpdated": 1480446910557,
+        "sector": "softwareservices",
+        "securityType": "commonstock"
+      }
+
+    this.props.dispatch(stockPriceActions.updateCurrentStockPrice(stock));
+
+
+  // {
+  //   "symbol": "FB",
+  //   "marketPercent": 0.01465,
+  //   "bidSize": 200,
+  //   "bidPrice": 120.8,
+  //   "askSize": 100,
+  //   "askPrice": 122.5,
+  //   "volume": 205208,
+  //   "lastSalePrice": 121.41,
+  //   "lastSaleSize": 100,
+  //   "lastSaleTime": 1480446908666,
+  //   "lastUpdated": 1480446923942,
+  //   "sector": "softwareservices",
+  //   "securityType": "commonstock"
+  // },
+  // {
+  //   "symbol": "AIG+",
+  //   "marketPercent": 0.04618,
+  //   "bidSize": 0,
+  //   "bidPrice": 0,
+  //   "askSize": 0,
+  //   "askPrice": 0,
+  //   "volume": 3400,
+  //   "lastSalePrice": 21.52,
+  //   "lastSaleSize": 100,
+  //   "lastSaleTime": 1480446206461,
+  //   "lastUpdated": -1,
+  //   "sector": "insurance",
+  //   "securityType": "commonstock"
+  // }
+
+  }
+  getRandomArbitrary = (min, max) => {
+    return Math.random() * (max - min) + min;
+  }
+
+
+
+
+
   handleSubmit = event => {
     event.preventDefault()
+
 
     // this.props.userPostFetch(this.state)
     // this.setState({ submitted: true });
     this.setState({ purchaseLoading: true})
+    this.setState({ balanceError: false, quantityError: false})
+    debugger
     const { user, stockPrice } = this.props;
     const {quantity } = this.state;
     const { stock } = stockPrice;
     const { lastSalePrice, symbol } = stock;
     const { balance } = user.user;
+    let quant = parseFloat(quantity)
     //
     let totalPrice = lastSalePrice * quantity
     console.log(totalPrice)
 
-    if (balance >= totalPrice && totalPrice) {
-    debugger;
+
+
+    if(balance < totalPrice && totalPrice){
+      this.setState({ balanceError: true})
+      this.setState({ purchaseLoading: false})
+    } else{
+      this.setState({ balanceError: false})
+    }
+
+    if(!Number.isInteger(quant)){
+      this.setState({ quantityError: true})
+      this.setState({ purchaseLoading: false})
+    } else {
+      this.setState({ quantityError: false})
+    }
+
+    if ((balance >= totalPrice && totalPrice) && Number.isInteger(quant)) {
+      debugger;
+
+
          // dispatch(userActions.purchaseStock(symbol, lastSalePrice, quantity));
          let ticker = symbol
          let price = lastSalePrice
@@ -96,7 +188,7 @@ class PurchaseForm extends Component {
          })
          .catch(error => {
            console.error('Error:', error)
-           // this.setState({isError: true})
+           // this.setState({isTickerError: true})
            // this.setState({isLoading: false})
          });
     }
@@ -127,7 +219,7 @@ class PurchaseForm extends Component {
          })
          .catch(error => {
            console.error('Error:', error)
-           // this.setState({isError: true})
+           // this.setState({isTickerError: true})
            // this.setState({isLoading: false})
          });
 
@@ -152,7 +244,7 @@ class PurchaseForm extends Component {
     if(this.state.subscribed){
       this.unsubscribeToChannel()
     }
-    this.setState({isError: false})//clear error message
+    this.setState({isTickerError: false})//clear error message
     this.setState({isLoading: true})
     let url = `https://cloud.iexapis.com/stable/stock/${this.state.ticker}/ohlc?token=pk_1d9ec4ada27746599964da901ab535f1`;
     fetch(url, {
@@ -168,7 +260,7 @@ class PurchaseForm extends Component {
     })
     .catch(error => {
       console.error('Error:', error)
-      this.setState({isError: true})
+      this.setState({isTickerError: true})
       this.setState({isLoading: false})
     });
 
@@ -176,7 +268,7 @@ class PurchaseForm extends Component {
 
 
   render() {
-    const { isLoading, isError, subscribed, successMessage } = this.state
+    const { isLoading, isTickerError, subscribed, successMessage, quantityError, balanceError } = this.state
     let message = ""
 
     const { user, stockPrice } = this.props;
@@ -184,7 +276,7 @@ class PurchaseForm extends Component {
     if (user) {
       message = user.user.balance;
     }
-          // <i aria-hidden="true" class="spinner icon"></i>
+          // <i aria-hidden="true" class="spinner icon"></i>]error={isTickerError && quantityError && balanceError}
     return (
       <div >
         {successMessage?   <div><h2> <Message
@@ -195,21 +287,22 @@ class PurchaseForm extends Component {
               <Button onClick={this.purchaseMoreStock}>Purchase More Stock</Button>
 
                 </div> :
-      (<Form error={isError} >
+      (<Form error>
       <h2>Cash Balance ${message} </h2>
       <h1>Purchase Stock </h1>
       <Button onClick={this.handleTestSubmit}>PurchaseFormTester</Button> //remove button later
         <Form.Field>
           <Input name='ticker' value={this.state.ticker} action={{ content: 'Search', onClick: this.handleTickerValidity}} loading={isLoading} onChange={this.handleChange} placeholder='Search...' />
         </Form.Field>
+        {isTickerError ?
         <Message
           error
           header='Invalid Symbol'
           content='Please enter valid stock symbol.'
-        />
+        /> : null}
         {subscribed ? (
           <div >
-          <PurchaseSegment {...this.props} purchaseMoreStock={this.purchaseMoreStock} handleChange={this.handleChange} handleSubmit={this.handleSubmit} purchaseLoading={this.state.purchaseLoading} />
+          <PurchaseSegment {...this.props} balanceError={balanceError} quantityError={quantityError} purchaseMoreStock={this.purchaseMoreStock} handleChange={this.handleChange} handleSubmit={this.handleSubmit} purchaseLoading={this.state.purchaseLoading} />
           </div>
         ): null
         }
