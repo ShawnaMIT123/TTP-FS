@@ -50,11 +50,11 @@ function updateUserBalance(balance) {
 }
 
 
-function signup(email, password) {
+function signup(email, password, first_name, last_name) {
     return dispatch => {
         dispatch(request({ email }));
 
-        userService.signup(email, password)
+        userService.signup(email, password, first_name, last_name)
             .then(
                 user => {
                     dispatch(success(user));
@@ -62,7 +62,7 @@ function signup(email, password) {
                 },
                 error => {
                     dispatch(failure(error));
-                    dispatch(alertActions.error(error));
+                    dispatch(alertActions.error("Email already exists. Please try again."));
                 }
             );
     };

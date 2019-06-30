@@ -108,7 +108,7 @@ class PurchaseForm extends Component {
          fetch(url, {
            method: 'POST', // or 'PUT'
            headers: authHeader(),
-           body: JSON.stringify({'transact': { ticker: 'NFLX', price: '12.50', quantity: 3}})
+           body: JSON.stringify({'transact': { ticker: 'BAC', price: '12.50', quantity: 3}})
 
          }).then(res => res.json())
          .then(response => {

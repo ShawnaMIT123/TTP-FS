@@ -29,11 +29,11 @@ function login(email, password) {
         });
 }
 
-function signup(email, password) {
+function signup(email, password, first_name, last_name) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({'user': { email, password }})
+        body: JSON.stringify({'user': { email, password, first_name, last_name }})
     };
 
     return fetch(`${apiUrl}/api/v1/users/`, requestOptions)
@@ -86,9 +86,6 @@ function getOpeningPrice(symbol){
   };
   return fetch(`${iexapiUrl}stock/${symbol}/ohlc?token=pk_1d9ec4ada27746599964da901ab535f1`, requestOptions).then(handleResponse);
 }
-
-
-
 
 function handleResponse(response) {
     return response.text().then(text => {

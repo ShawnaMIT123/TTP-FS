@@ -9,11 +9,14 @@ class TableList extends React.Component {
     return transactions.map(transaction => {
       return <TableItem key={transaction.id} transaction={transaction} {...this.props}/>
     })
-
   }
 
   render() {
+
+    const { transactions } = this.props;
     return (
+      <div >
+      {transactions  ? (
       <Table basic='very'  size='small'  >
         <Table.Header>
           <Table.Row>
@@ -24,12 +27,15 @@ class TableList extends React.Component {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-{this.props.user.transacts ? this.renderTransactions(this.props.user.transacts) : 'No transactions'}
+ {this.renderTransactions(transactions)}
         </Table.Body>
-      </Table>
+      </Table>) :
+      (<h1>'No transactions'</h1>)
+    }
+    </div>
     )
-  }
 
+  }
 }
 
 function mapStateToProps(state) {
