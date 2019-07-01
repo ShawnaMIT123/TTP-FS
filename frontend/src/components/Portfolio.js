@@ -22,6 +22,7 @@ class Portfolio extends Component {
       let stock = JSON.parse(message);
       let { symbol, askPrice, bidPrice, lastSalePrice } = stock;
       let pricing = { askPrice, bidPrice, lastSalePrice };
+
       this.props.dispatch(
         portfolioActions.updatePortfolioStockPrice(symbol, pricing)
       );
@@ -58,6 +59,14 @@ class Portfolio extends Component {
       this.props.dispatch(portfolioActions.getOpeningPrice(symbol));
     }
   };
+
+  handleSocketDisconnect = () => {
+    this.socket.close()
+    // let nsp = this.socket.of('/')
+    // nsp.removeListener('connection', connectionHandler);
+    this.socket.emit('unsubscribe', this.tickerSymbolsForSubscription())
+    this.socket.on('disconnect', () => console.log('Disconnected.'))
+  }
 
   render() {
     const { portfolio } = this.props;

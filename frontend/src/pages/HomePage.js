@@ -44,11 +44,12 @@ class HomePage extends React.Component {
         <NavBar
           handleTransactionClick={this.handleTransactionClick}
           handlePortfolioClick={this.handlePortfolioClick}
+          handleSocketDisconnect={() => this.portfolioComponent.handleSocketDisconnect() } 
         />
         {message}
         <div>
           {portfolio ? (
-            <Portfolio {...this.props} />
+            <Portfolio ref={instance => { this.portfolioComponent = instance; }} {...this.props} />
           ) : (
             <Transactions {...this.props} />
           )}

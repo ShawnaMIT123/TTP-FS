@@ -13,6 +13,7 @@ export default class NavBar extends Component {
     }else if(name == 'transactions'){
       this.props.handleTransactionClick()
     }else if(name == 'logout'){
+      this.props.handleSocketDisconnect()
       this.setRedirect();
     }
   }

@@ -10,6 +10,7 @@ import { Form, Button, Input, Message } from "semantic-ui-react";
 
 import { userActions, stockPriceActions, portfolioActions } from "../actions";
 
+
 class PurchaseForm extends Component {
   constructor(props) {
     super(props);
@@ -31,10 +32,14 @@ class PurchaseForm extends Component {
     const url = "https://ws-api.iextrading.com/1.0/tops";
     this.socket = socket(url, { reconnection: true });
 
+
     this.socket.on("message", message => {
       const msg = JSON.parse(message);
       this.handleWebSocketMessage(msg);
     });
+
+
+
   }
 
   handleChange = event => {
@@ -46,6 +51,10 @@ class PurchaseForm extends Component {
   handleWebSocketMessage = stock => {
     this.props.dispatch(stockPriceActions.updateCurrentStockPrice(stock));
   };
+
+  handlePuchaseFormSocketDisconnect = () => {
+    this.socket.close()
+  }
 
   // componentDidMount = () => {
   //   this.setState({ subscribed: true, subscribedStockTicker: "SNAP" });
@@ -78,22 +87,26 @@ class PurchaseForm extends Component {
   handleSubmit = event => {
     event.preventDefault();
 
+
+
     //change lastSalePrice to askPrice
     // this.props.userPostFetch(this.state)
     // this.setState({ submitted: true });
     this.setState({ purchaseLoading: true });
     this.setState({ balanceError: false, quantityError: false });
-    debugger;
     const { user, stockPrice } = this.props;
     const { quantity } = this.state;
     const { stock } = stockPrice;
-    const { lastSalePrice, symbol } = stock;
-    const { balance } = user.user;
+    let { askPrice, symbol } = stock;
+    let { balance } = user.user;
     let quant = parseFloat(quantity);
+    balance = parseFloat(balance);
+    askPrice = parseFloat(askPrice);
     //
-    let totalPrice = lastSalePrice * quantity;
+    let totalPrice = askPrice * quantity;
 
     if (balance < totalPrice && totalPrice) {
+      debugger
       this.setState({ balanceError: true });
       this.setState({ purchaseLoading: false });
     } else {
@@ -101,6 +114,7 @@ class PurchaseForm extends Component {
     }
 
     if (!Number.isInteger(quant)) {
+      debugger
       this.setState({ quantityError: true });
       this.setState({ purchaseLoading: false });
     } else {
@@ -110,7 +124,7 @@ class PurchaseForm extends Component {
     if (balance >= totalPrice && totalPrice && Number.isInteger(quant)) {
       // dispatch(userActions.purchaseStock(symbol, lastSalePrice, quantity));
       let ticker = symbol;
-      let price = lastSalePrice;
+      let price = askPrice;
 
       let url = `${apiUrl}/api/v1/purchase/`;
       fetch(url, {
@@ -151,43 +165,45 @@ class PurchaseForm extends Component {
     }
   };
 
-  handleTestSubmit = event => {
-    let url = `${apiUrl}/api/v1/purchase/`;
-    fetch(url, {
-      method: "POST", // or 'PUT'
-      headers: authHeader(),
-      body: JSON.stringify({
-        transact: { ticker: "BAC", price: "12.50", quantity: 3 }
-      })
-    })
-      .then(res => res.json())
-      .then(response => {
-        //pessimistic rendering
-        this.setState({ purchaseLoading: false });
-        this.setState({ successMessage: true });
+  // handleTestSubmit = event => {
+  //   let url = `${apiUrl}/api/v1/purchase/`;
+  //   fetch(url, {
+  //     method: "POST", // or 'PUT'
+  //     headers: authHeader(),
+  //     body: JSON.stringify({
+  //       transact: { ticker: "BAC", price: "12.50", quantity: 3 }
+  //     })
+  //   })
+  //     .then(res => res.json())
+  //     .then(response => {
+  //       //pessimistic rendering
+  //       this.setState({ purchaseLoading: false });
+  //       this.setState({ successMessage: true });
+  //
+  //       this.props.dispatch(
+  //         userActions.addNewTransaction(response.transaction)
+  //       );
+  //       this.props.dispatch(userActions.updateUserBalance(response.balance));
+  //       this.props.dispatch(
+  //         portfolioActions.updateTransactionsMap(
+  //           response.ticker,
+  //           response.ticker_quantity_sum
+  //         )
+  //       );
+  //       this.props.dispatch(portfolioActions.getOpeningPrice(response.ticker));
+  //       this.props.subscribeToPortfolioWebSocket(response.ticker);
+  //       console.log("Success:", JSON.stringify(response));
+  //       // this.subscribeToStockChannel(this.state.ticker)
+  //       // this.setState({isLoading: false})
+  //     })
+  //     .catch(error => {
+  //       console.error("Error:", error);
+  //       // this.setState({isTickerError: true})
+  //       // this.setState({isLoading: false})
+  //     });
+  // };
 
-        this.props.dispatch(
-          userActions.addNewTransaction(response.transaction)
-        );
-        this.props.dispatch(userActions.updateUserBalance(response.balance));
-        this.props.dispatch(
-          portfolioActions.updateTransactionsMap(
-            response.ticker,
-            response.ticker_quantity_sum
-          )
-        );
-        this.props.dispatch(portfolioActions.getOpeningPrice(response.ticker));
-        this.props.subscribeToPortfolioWebSocket(response.ticker);
-        console.log("Success:", JSON.stringify(response));
-        // this.subscribeToStockChannel(this.state.ticker)
-        // this.setState({isLoading: false})
-      })
-      .catch(error => {
-        console.error("Error:", error);
-        // this.setState({isTickerError: true})
-        // this.setState({isLoading: false})
-      });
-  };
+
 
   unsubscribeToChannel = () => {
     this.socket.emit("unsubscribe", this.state.subscribedStockTicker);
